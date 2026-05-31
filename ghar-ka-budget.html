@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ghar Ka Budget - Family Budget & Ration Planner. Apne ghar ka budget, ration aur expenses asani se manage karein.">
+<meta name="keywords" content="ghar ka budget, family budget, ration planner, expense tracker, household budget pakistan">
+<meta name="author" content="Hanana">
+<title>گھر کا بجٹ – Family Budget & Ration Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F3EE;--surface:#FFFFFF;--surface2:#F0EBE3;
+  --border:#E8DDD3;--accent:#C8864A;--accent2:#8B4513;
+  --accent3:#E8A87C;--text:#2C1A0E;--muted:#8B7355;
+  --success:#4CAF50;--danger:#E53935;--warn:#FF9800;
+  --shadow:rgba(200,134,74,0.15);--card:#FFFAF6;
+}
+.dark{
+  --bg:#1A1208;--surface:#241A0F;--surface2:#2E2015;
+  --border:#3D2E1E;--accent:#E8A87C;--accent2:#C8864A;
+  --accent3:#F0C498;--text:#F5EDE3;--muted:#A08060;
+  --shadow:rgba(0,0,0,0.4);--card:#2A1E12;
+}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:all 0.3s;direction:ltr}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+/* ── NAVBAR ── */
+.navbar{background:var(--surface);border-bottom:2px solid var(--border);padding:0 16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px var(--shadow)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--accent);text-decoration:none}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:grid;place-items:center;color:white;font-size:18px}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-link{padding:7px 12px;border-radius:8px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;transition:all 0.2s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{background:rgba(200,134,74,0.12);color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.dark-btn{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:16px;display:grid;place-items:center;color:var(--text)}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border:none;background:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all 0.3s}
+.mob-menu{display:none;position:fixed;top:60px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:12px;z-index:99;flex-direction:column;gap:4px;box-shadow:0 8px 24px var(--shadow)}
+.mob-menu.open{display:flex}
+
+/* ── AD BANNER ── */
+.ad-banner{background:linear-gradient(135deg,rgba(200,134,74,0.08),rgba(139,69,19,0.05));border:1.5px dashed var(--accent3);border-radius:12px;padding:12px;text-align:center;color:var(--muted);font-size:11px;margin:12px 0;min-height:60px;display:flex;align-items:center;justify-content:center}
+
+/* ── MAIN ── */
+.main{max-width:1100px;margin:0 auto;padding:16px}
+.page{display:none}
+.page.active{display:block;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:rgba(200,134,74,0.08)}
+.stat-icon{font-size:24px;margin-bottom:8px}
+.stat-label{font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500}
+.stat-val{font-size:20px;font-weight:700;color:var(--accent)}
+.stat-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+.progress-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
+.prog-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;font-weight:500}
+.prog-bar{height:10px;background:var(--surface2);border-radius:10px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:10px;transition:width 0.5s ease}
+.prog-fill.warn{background:linear-gradient(90deg,var(--warn),#FF5722)}
+.prog-fill.danger{background:linear-gradient(90deg,var(--danger),#B71C1C)}
+
+/* ── SECTION HEADER ── */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sec-title{font-size:18px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.sec-title span{font-size:22px}
+.btn{padding:9px 16px;border-radius:10px;border:none;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;box-shadow:0 4px 12px var(--shadow)}
+.btn-primary:active{transform:scale(0.97)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
+.btn-danger{background:rgba(229,57,53,0.1);color:var(--danger);border:1px solid rgba(229,57,53,0.2)}
+.btn-success{background:rgba(76,175,80,0.1);color:var(--success);border:1px solid rgba(76,175,80,0.2)}
+.btn-sm{padding:6px 12px;font-size:11px}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text)}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted)}
+.field input,.field select,.field textarea{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field select option{background:var(--surface)}
+
+/* ── BUDGET SETUP ── */
+.budget-setup{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:20px;padding:24px;color:white;margin-bottom:20px;position:relative;overflow:hidden}
+.budget-setup::before{content:'💰';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:60px;opacity:0.15}
+.budget-setup h2{font-size:16px;opacity:0.9;margin-bottom:8px}
+.budget-setup .big{font-size:36px;font-weight:800;letter-spacing:-1px}
+.budget-setup input{background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.4);border-radius:10px;padding:10px 14px;font-size:20px;font-weight:700;color:white;outline:none;width:100%;margin-top:12px}
+.budget-setup input::placeholder{color:rgba(255,255,255,0.6)}
+
+/* ── RATION TABLE ── */
+.ration-table{width:100%;border-collapse:collapse}
+.ration-table th{background:var(--surface2);padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);text-align:left}
+.ration-table td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.ration-table tr:hover td{background:rgba(200,134,74,0.04)}
+.ration-table input{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--text);outline:none;width:100%;transition:border-color 0.2s}
+.ration-table input:focus{border-color:var(--accent)}
+.item-total{font-weight:700;color:var(--accent)}
+.check-col input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+
+/* ── EXPENSE ── */
+.exp-list{display:flex;flex-direction:column;gap:8px}
+.exp-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;animation:slideIn 0.3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.exp-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.exp-details{flex:1;min-width:0}
+.exp-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.exp-meta{font-size:11px;color:var(--muted)}
+.exp-amount{font-size:15px;font-weight:700;color:var(--danger);white-space:nowrap}
+
+/* ── REPORTS ── */
+.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.rep-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.rep-num{font-size:28px;font-weight:800;color:var(--accent);font-family:'Poppins',sans-serif}
+.rep-label{font-size:12px;color:var(--muted);margin-top:4px}
+.chart-bar-wrap{display:flex;flex-direction:column;gap:8px}
+.chart-row{display:flex;align-items:center;gap:10px}
+.chart-label{font-size:11px;color:var(--muted);width:80px;text-align:right;flex-shrink:0}
+.chart-bar{height:22px;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent3));min-width:4px;transition:width 0.6s ease;display:flex;align-items:center;padding-left:8px}
+.chart-val{font-size:11px;color:white;font-weight:600;white-space:nowrap}
+
+/* ── AFFILIATE ── */
+.aff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.aff-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:transform 0.2s;cursor:pointer}
+.aff-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px var(--shadow)}
+.aff-img{height:100px;background:linear-gradient(135deg,var(--surface2),var(--border));display:grid;place-items:center;font-size:40px}
+.aff-body{padding:10px}
+.aff-name{font-size:12px;font-weight:600;margin-bottom:4px}
+.aff-desc{font-size:10px;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.aff-btn{display:block;text-align:center;padding:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none}
+
+/* ── ABOUT/PRIVACY/CONTACT ── */
+.prose{font-size:14px;line-height:1.8;color:var(--muted)}
+.prose h3{font-size:16px;font-weight:700;color:var(--text);margin:16px 0 8px}
+.prose ul{padding-right:20px;margin-bottom:12px}
+.prose ul li{margin-bottom:6px}
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.contact-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.contact-icon{font-size:32px;margin-bottom:8px}
+.contact-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.contact-val{font-size:12px;color:var(--muted)}
+
+/* ── SEARCH ── */
+.search-wrap{position:relative;margin-bottom:14px}
+.search-wrap input{padding-left:36px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:10px 22px;border-radius:40px;font-size:13px;font-weight:500;z-index:999;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── FOOTER ── */
+footer{background:var(--surface);border-top:2px solid var(--border);padding:24px 16px;text-align:center;margin-top:32px}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer-links{display:flex;justify-content:center;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.footer-link{font-size:12px;color:var(--muted);cursor:pointer;text-decoration:none}
+.footer-link:hover{color:var(--accent)}
+.footer-copy{font-size:12px;color:var(--muted)}
+.footer-copy strong{color:var(--accent)}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:0.5}
+.empty p{font-size:13px;line-height:1.7}
+
+/* ── BADGE ── */
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600}
+.badge-green{background:rgba(76,175,80,0.12);color:var(--success)}
+.badge-red{background:rgba(229,57,53,0.12);color:var(--danger)}
+.badge-orange{background:rgba(255,152,0,0.12);color:var(--warn)}
+
+/* ── BILLS SECTION ── */
+.bills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.bill-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px}
+.bill-icon{font-size:24px;width:40px;text-align:center}
+.bill-body{flex:1}
+.bill-name{font-size:12px;font-weight:600;margin-bottom:4px}
+.bill-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:14px;font-weight:700;color:var(--accent);width:100%;outline:none;font-family:'Poppins',sans-serif}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .dash-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .dash-grid{grid-template-columns:repeat(2,1fr)}
+  .aff-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* CATEGORY TABS */
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.cat-tab{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all 0.2s}
+.cat-tab.active{background:var(--accent);border-color:var(--accent);color:white}
+
+/* MONTH SELECTOR */
+.month-sel{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.month-sel select{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--text);outline:none}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* TAGS */
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;background:rgba(200,134,74,0.12);color:var(--accent);margin:2px}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="logo" onclick="showPage('dashboard')">
+      <div class="logo-icon">🏠</div>
+      <span>گھر کا بجٹ</span>
+    </a>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showPage('dashboard')">🏠 Dashboard</button>
+      <button class="nav-link" onclick="showPage('budget')">💰 Budget</button>
+      <button class="nav-link" onclick="showPage('ration')">🛒 Ration</button>
+      <button class="nav-link" onclick="showPage('expense')">📊 Expenses</button>
+      <button class="nav-link" onclick="showPage('reports')">📈 Reports</button>
+      <button class="nav-link" onclick="showPage('about')">ℹ️ About</button>
+    </div>
+    <div class="nav-right">
+      <button class="dark-btn" onclick="toggleDark()" id="darkBtn">🌙</button>
+      <button class="hamburger" onclick="toggleMenu()" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <button class="nav-link" onclick="showPage('dashboard');toggleMenu()">🏠 Dashboard</button>
+  <button class="nav-link" onclick="showPage('budget');toggleMenu()">💰 Budget Planner</button>
+  <button class="nav-link" onclick="showPage('ration');toggleMenu()">🛒 Ration & Grocery</button>
+  <button class="nav-link" onclick="showPage('expense');toggleMenu()">📊 Expense Manager</button>
+  <button class="nav-link" onclick="showPage('reports');toggleMenu()">📈 Reports</button>
+  <button class="nav-link" onclick="showPage('about');toggleMenu()">ℹ️ About</button>
+  <button class="nav-link" onclick="showPage('privacy');toggleMenu()">🔒 Privacy Policy</button>
+  <button class="nav-link" onclick="showPage('contact');toggleMenu()">📞 Contact Us</button>
+</div>
+
+<div class="main">
+
+  <!-- TOP AD -->
+  <div class="ad-banner">
+    <!-- Google AdSense Ad Unit -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="XXXXXXXX" data-ad-format="auto"></ins> -->
+    📢 Ad Space — Google AdSense Banner (728x90)
+  </div>
+
+  <!-- ══════════════════ DASHBOARD ══════════════════ -->
+  <div class="page active" id="page-dashboard">
+    <div class="sec-head">
+      <div class="sec-title"><span>🏠</span> Dashboard</div>
+      <div class="month-sel">
+        <select id="dashMonth" onchange="updateDashboard()">
+          <option>January 2025</option><option>February 2025</option>
+          <option>March 2025</option><option>April 2025</option>
+          <option>May 2025</option><option selected>June 2025</option>
+          <option>July 2025</option><option>August 2025</option>
+          <option>September 2025</option><option>October 2025</option>
+          <option>November 2025</option><option>December 2025</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Total Budget</div>
+        <div class="stat-val" id="dBudget">Rs. 0</div>
+        <div class="stat-sub">Monthly</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💸</div>
+        <div class="stat-label">Total Expenses</div>
+        <div class="stat-val" id="dExpenses" style="color:var(--danger)">Rs. 0</div>
+        <div class="stat-sub">This Month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛒</div>
+        <div class="stat-label">Ration Cost</div>
+        <div class="stat-val" id="dRation" style="color:var(--warn)">Rs. 0</div>
+        <div class="stat-sub">Groceries</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-label">Total Bills</div>
+        <div class="stat-val" id="dBills" style="color:#5C6BC0">Rs. 0</div>
+        <div class="stat-sub">Utilities</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-label">Remaining</div>
+        <div class="stat-val" id="dRemain" style="color:var(--success)">Rs. 0</div>
+        <div class="stat-sub">Balance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-label">Used %</div>
+        <div class="stat-val" id="dPercent">0%</div>
+        <div class="stat-sub">Of Budget</div>
+      </div>
+    </div>
+
+    <div class="progress-card">
+      <div class="prog-label">
+        <span>Budget Usage</span>
+        <span id="progText">0 / 0</span>
+      </div>
+      <div class="prog-bar">
+        <div class="prog-fill" id="progFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Bills Quick Entry -->
+    <div class="card">
+      <div class="card-title">⚡ Monthly Bills</div>
+      <div class="bills-grid">
+        <div class="bill-card">
+          <div class="bill-icon">💡</div>
+          <div class="bill-body">
+            <div class="bill-name">Electricity</div>
+            <input class="bill-input" type="number" id="billElec" placeholder="0" oninput="saveBills()">
+          </div>
+        </div>
+        <div class="bill-card">
+          <div class="bill-icon">🔥</div>
+          <div class="bill-body">
+            <div class="bill-name">Gas</div>
+            <input class="bill-input" type="number" id="billGas" placeholder="0" oninput="saveBills()">
+          </div>
+        </div>
+        <div class="bill-card">
+          <div class="bill-icon">💧</div>
+          <div class="bill-body">
+            <div class="bill-name">Water</div>
+            <input class="bill-input" type="number" id="billWater" placeholder="0" oninput="saveBills()">
+          </div>
+        </div>
+        <div class="bill-card">
+          <div class="bill-icon">🌐</div>
+          <div class="bill-body">
+            <div class="bill-name">Internet</div>
+            <input class="bill-input" type="number" id="billNet" placeholder="0" oninput="saveBills()">
+          </div>
+        </div>
+        <div class="bill-card">
+          <div class="bill-icon">📱</div>
+          <div class="bill-body">
+            <div class="bill-name">Mobile</div>
+            <input class="bill-input" type="number" id="billMob" placeholder="0" oninput="saveBills()">
+          </div>
+        </div>
+        <div class="bill-card">
+          <div class="bill-icon">🏠</div>
+          <div class="bill-body">
+            <div class="bill-name">Rent</div>
+            <input class="bill-input" type="number" id="billRent" placeholder="0" oninput="saveBills()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle AD -->
+    <div class="ad-banner">
+      📢 Ad Space — Google AdSense (336x280)
+    </div>
+
+    <!-- Affiliate Products -->
+    <div class="card">
+      <div class="card-title">🛍️ Recommended Products</div>
+      <div class="aff-grid" id="affGrid"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ BUDGET PLANNER ══════════════════ -->
+  <div class="page" id="page-budget">
+    <div class="sec-head">
+      <div class="sec-title"><span>💰</span> Budget Planner</div>
+    </div>
+
+    <div class="budget-setup">
+      <h2>Monthly Budget Set Karein</h2>
+      <div class="big" id="budgetDisplay">Rs. 0</div>
+      <input type="number" id="budgetInput" placeholder="Monthly budget enter karein..." oninput="saveBudget()">
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Budget Categories</div>
+      <div class="form-grid" style="margin-bottom:14px">
+        <div class="field">
+          <label>Category Name</label>
+          <input type="text" id="catName" placeholder="e.g. Ration, Medical...">
+        </div>
+        <div class="field">
+          <label>Allocated Amount (Rs.)</label>
+          <input type="number" id="catAmount" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Icon</label>
+          <select id="catIcon">
+            <option value="🛒">🛒 Ration</option>
+            <option value="💊">💊 Medical</option>
+            <option value="📚">📚 Education</option>
+            <option value="👗">👗 Clothing</option>
+            <option value="🚗">🚗 Transport</option>
+            <option value="🎉">🎉 Entertainment</option>
+            <option value="💄">💄 Beauty</option>
+            <option value="🏥">🏥 Health</option>
+            <option value="📱">📱 Bills</option>
+            <option value="🏠">🏠 Home</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="addCategory()">➕ Category Add Karein</button>
+    </div>
+
+    <div id="catList"></div>
+  </div>
+
+  <!-- ══════════════════ RATION & GROCERY ══════════════════ -->
+  <div class="page" id="page-ration">
+    <div class="sec-head">
+      <div class="sec-title"><span>🛒</span> Ration & Grocery</div>
+      <button class="btn btn-primary btn-sm" onclick="addCustomItem()">➕ Item Add</button>
+    </div>
+
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Item search karein..." oninput="filterRation(this.value)" style="padding-left:36px">
+    </div>
+
+    <div class="cat-tabs" id="rationTabs">
+      <div class="cat-tab active" onclick="filterCat('all',this)">🛒 Sab</div>
+      <div class="cat-tab" onclick="filterCat('staple',this)">🌾 Staples</div>
+      <div class="cat-tab" onclick="filterCat('protein',this)">🥩 Protein</div>
+      <div class="cat-tab" onclick="filterCat('dairy',this)">🥛 Dairy</div>
+      <div class="cat-tab" onclick="filterCat('produce',this)">🥦 Sabzi/Fruit</div>
+      <div class="cat-tab" onclick="filterCat('spice',this)">🌶️ Masalay</div>
+      <div class="cat-tab" onclick="filterCat('other',this)">📦 Other</div>
+    </div>
+
+    <div class="card" style="overflow-x:auto">
+      <table class="ration-table" id="rationTable">
+        <thead>
+          <tr>
+            <th class="check-col">✓</th>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Unit</th>
+            <th>Price/Unit (Rs.)</th>
+            <th>Total (Rs.)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="rationBody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" style="text-align:right;font-weight:700;padding:12px">Total Ration Cost:</td>
+            <td style="font-weight:800;color:var(--accent);font-size:16px" id="rationTotal">Rs. 0</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="ad-banner">📢 Ad Space — Google AdSense</div>
+  </div>
+
+  <!-- ══════════════════ EXPENSE MANAGER ══════════════════ -->
+  <div class="page" id="page-expense">
+    <div class="sec-head">
+      <div class="sec-title"><span>📊</span> Expense Manager</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">➕ Naya Expense Add Karein</div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Title</label>
+          <input type="text" id="expTitle" placeholder="Expense ka naam...">
+        </div>
+        <div class="field">
+          <label>Amount (Rs.)</label>
+          <input type="number" id="expAmount" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select id="expCat">
+            <option value="food" data-icon="🍽️">🍽️ Food</option>
+            <option value="transport" data-icon="🚗">🚗 Transport</option>
+            <option value="medical" data-icon="💊">💊 Medical</option>
+            <option value="education" data-icon="📚">📚 Education</option>
+            <option value="clothing" data-icon="👗">👗 Clothing</option>
+            <option value="entertainment" data-icon="🎉">🎉 Entertainment</option>
+            <option value="bills" data-icon="📱">📱 Bills</option>
+            <option value="other" data-icon="📦">📦 Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="expDate">
+        </div>
+        <div class="field">
+          <label>Note (Optional)</label>
+          <input type="text" id="expNote" placeholder="Extra note...">
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn btn-primary" onclick="addExpense()">💾 Save Expense</button>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:16px">
+      <div style="font-size:14px;font-weight:600">All Expenses</div>
+      <button class="btn btn-danger btn-sm" onclick="clearExpenses()">🗑️ Clear All</button>
+    </div>
+
+    <div class="exp-list" id="expList">
+      <div class="empty"><div class="empty-icon">💸</div><p>Koi expense nahi<br>Upar add karein</p></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ REPORTS ══════════════════ -->
+  <div class="page" id="page-reports">
+    <div class="sec-head">
+      <div class="sec-title"><span>📈</span> Monthly Reports</div>
+      <button class="btn btn-outline btn-sm" onclick="printReport()">🖨️ Print</button>
+    </div>
+
+    <div class="report-grid" id="reportGrid"></div>
+
+    <div class="card">
+      <div class="card-title">📊 Category Wise Spending</div>
+      <div class="chart-bar-wrap" id="chartBars"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Summary Table</div>
+      <table class="ration-table" id="summaryTable">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Amount (Rs.)</th>
+            <th>% of Budget</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="summaryBody"></tbody>
+      </table>
+    </div>
+
+    <div class="ad-banner">📢 Ad Space — Google AdSense</div>
+  </div>
+
+  <!-- ══════════════════ ABOUT ══════════════════ -->
+  <div class="page" id="page-about">
+    <div class="card">
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:64px;margin-bottom:12px">🏠</div>
+        <h2 style="font-size:24px;font-weight:800;color:var(--accent);margin-bottom:8px">گھر کا بجٹ</h2>
+        <p style="color:var(--muted);font-size:13px">Family Budget & Ration Planner</p>
+        <div style="margin:16px 0">
+          <span class="tag">Budget Planner</span>
+          <span class="tag">Ration Tracker</span>
+          <span class="tag">Expense Manager</span>
+          <span class="tag">Monthly Reports</span>
+        </div>
+      </div>
+      <div class="prose">
+        <h3>📖 App Ke Baare Mein</h3>
+        <p>Ghar Ka Budget aik mufat, asaan aur professional family budget management app hai jo Pakistan ke ghar ke liye khaas taur par banaya gaya hai. Is app ki madad se aap apne ghar ka maheena bhar ka budget plan kar sakte hain, ration track kar sakte hain aur rozana ke kharche manage kar sakte hain.</p>
+        <h3>✨ Features</h3>
+        <ul>
+          <li>Monthly budget setup aur tracking</li>
+          <li>150+ preloaded ration items</li>
+          <li>Automatic expense calculations</li>
+          <li>Bills management (Bijli, Gas, Paani, Internet)</li>
+          <li>Monthly reports aur charts</li>
+          <li>Dark mode support</li>
+          <li>Offline working — no internet needed</li>
+          <li>Local storage — data safe rahta hai</li>
+        </ul>
+        <h3>👩‍💻 Developer</h3>
+        <p>Is app ko <strong>Hanana</strong> ne banaya hai. Hamara maqsad Pakistan ke ghar walon ko unke finances manage karne mein madad karna hai.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ PRIVACY ══════════════════ -->
+  <div class="page" id="page-privacy">
+    <div class="card">
+      <div class="sec-title" style="margin-bottom:16px"><span>🔒</span> Privacy Policy</div>
+      <div class="prose">
+        <p><strong>Last Updated:</strong> June 2025</p>
+        <h3>Data Collection</h3>
+        <p>Ghar Ka Budget app aapki koi bhi personal information collect nahi karta. Aapka sab data sirf aapki device ke local storage mein save hota hai.</p>
+        <h3>Local Storage</h3>
+        <p>Yeh app sirf browser ke localStorage use karta hai. Koi data kisi server par send nahi hota. Aap kabhi bhi apna data clear kar sakte hain.</p>
+        <h3>Advertising</h3>
+        <p>Is app mein Google AdSense ads show ho sakti hain. Google apni privacy policy ke mutabiq data use kar sakta hai. Aap Google ke ad settings mein jakar personalized ads off kar sakte hain.</p>
+        <h3>Cookies</h3>
+        <p>Yeh app khud koi cookies use nahi karta. AdSense apni cookies use kar sakti hai jo Google ki privacy policy ke under hain.</p>
+        <h3>Contact</h3>
+        <p>Privacy ke baare mein sawaal ke liye hamare Contact section mein jaayein.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ CONTACT ══════════════════ -->
+  <div class="page" id="page-contact">
+    <div class="sec-head">
+      <div class="sec-title"><span>📞</span> Contact Us</div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-icon">📧</div>
+        <div class="contact-title">Email</div>
+        <div class="contact-val">hanana@gharkabudget.pk</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📱</div>
+        <div class="contact-title">WhatsApp</div>
+        <div class="contact-val">+92 300 0000000</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">📍</div>
+        <div class="contact-title">Location</div>
+        <div class="contact-val">Lahore, Pakistan</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">✉️ Message Bhejein</div>
+      <div class="form-grid">
+        <div class="field"><label>Naam</label><input type="text" placeholder="Aapka naam..."></div>
+        <div class="field"><label>Email</label><input type="email" placeholder="email@example.com"></div>
+      </div>
+      <div class="field" style="margin-top:12px">
+        <label>Message</label>
+        <textarea rows="4" placeholder="Apna message likhen..."></textarea>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="toast('✅ Message send ho gaya!')">📤 Send Message</button>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- FOOTER AD -->
+<div style="max-width:1100px;margin:0 auto;padding:0 16px">
+  <div class="ad-banner">📢 Ad Space — Google AdSense Footer Banner</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a class="footer-link" onclick="showPage('dashboard')">🏠 Home</a>
+      <a class="footer-link" onclick="showPage('about')">ℹ️ About</a>
+      <a class="footer-link" onclick="showPage('privacy')">🔒 Privacy Policy</a>
+      <a class="footer-link" onclick="showPage('contact')">📞 Contact</a>
+    </div>
+    <div class="footer-copy">
+      Made with ❤️ by <strong>Hanana</strong> | گھر کا بجٹ © 2025
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ══ DATA ══
+let data = JSON.parse(localStorage.getItem('ghb_data') || JSON.stringify({
+  budget: 0,
+  bills: {elec:0,gas:0,water:0,net:0,mob:0,rent:0},
+  ration: [],
+  expenses: [],
+  categories: [],
+  darkMode: false
+}));
+
+// ══ RATION ITEMS ══
+const defaultRation = [
+  {id:1,name:'Aata',emoji:'🌾',qty:10,unit:'kg',price:120,cat:'staple'},
+  {id:2,name:'Chawal (Basmati)',emoji:'🍚',qty:5,unit:'kg',price:280,cat:'staple'},
+  {id:3,name:'Chawal (Sella)',emoji:'🍚',qty:5,unit:'kg',price:180,cat:'staple'},
+  {id:4,name:'Daal Masoor',emoji:'🫘',qty:2,unit:'kg',price:320,cat:'staple'},
+  {id:5,name:'Daal Chana',emoji:'🫘',qty:2,unit:'kg',price:280,cat:'staple'},
+  {id:6,name:'Daal Mash',emoji:'🫘',qty:1,unit:'kg',price:380,cat:'staple'},
+  {id:7,name:'Cheeni',emoji:'🍬',qty:3,unit:'kg',price:160,cat:'staple'},
+  {id:8,name:'Ghee',emoji:'🧈',qty:2,unit:'kg',price:680,cat:'staple'},
+  {id:9,name:'Cooking Oil',emoji:'🫙',qty:3,unit:'ltr',price:480,cat:'staple'},
+  {id:10,name:'Chai Patti',emoji:'🍵',qty:1,unit:'kg',price:1200,cat:'staple'},
+  {id:11,name:'Doodh',emoji:'🥛',qty:30,unit:'ltr',price:160,cat:'dairy'},
+  {id:12,name:'Anday',emoji:'🥚',qty:30,unit:'pcs',price:20,cat:'dairy'},
+  {id:13,name:'Dahi',emoji:'🫙',qty:4,unit:'kg',price:200,cat:'dairy'},
+  {id:14,name:'Makhan',emoji:'🧈',qty:500,unit:'gm',price:400,cat:'dairy'},
+  {id:15,name:'Chicken',emoji:'🍗',qty:5,unit:'kg',price:480,cat:'protein'},
+  {id:16,name:'Beef/Gosht',emoji:'🥩',qty:2,unit:'kg',price:1200,cat:'protein'},
+  {id:17,name:'Mutton',emoji:'🥩',qty:1,unit:'kg',price:1800,cat:'protein'},
+  {id:18,name:'Machli',emoji:'🐟',qty:1,unit:'kg',price:600,cat:'protein'},
+  {id:19,name:'Aalu',emoji:'🥔',qty:5,unit:'kg',price:80,cat:'produce'},
+  {id:20,name:'Pyaz',emoji:'🧅',qty:3,unit:'kg',price:100,cat:'produce'},
+  {id:21,name:'Tamatar',emoji:'🍅',qty:3,unit:'kg',price:120,cat:'produce'},
+  {id:22,name:'Lehsan',emoji:'🧄',qty:500,unit:'gm',price:400,cat:'produce'},
+  {id:23,name:'Adrak',emoji:'🫚',qty:250,unit:'gm',price:200,cat:'produce'},
+  {id:24,name:'Mooli',emoji:'🥬',qty:2,unit:'kg',price:60,cat:'produce'},
+  {id:25,name:'Paalak',emoji:'🥬',qty:2,unit:'kg',price:80,cat:'produce'},
+  {id:26,name:'Kela',emoji:'🍌',qty:2,unit:'dozen',price:120,cat:'produce'},
+  {id:27,name:'Seb',emoji:'🍎',qty:2,unit:'kg',price:280,cat:'produce'},
+  {id:28,name:'Lemon',emoji:'🍋',qty:1,unit:'kg',price:160,cat:'produce'},
+  {id:29,name:'Lal Mirch',emoji:'🌶️',qty:500,unit:'gm',price:320,cat:'spice'},
+  {id:30,name:'Haldi',emoji:'🟡',qty:250,unit:'gm',price:180,cat:'spice'},
+  {id:31,name:'Zeera',emoji:'🌿',qty:250,unit:'gm',price:280,cat:'spice'},
+  {id:32,name:'Dhania',emoji:'🌿',qty:250,unit:'gm',price:200,cat:'spice'},
+  {id:33,name:'Namak',emoji:'🧂',qty:2,unit:'kg',price:60,cat:'spice'},
+  {id:34,name:'Garam Masala',emoji:'🌶️',qty:100,unit:'gm',price:180,cat:'spice'},
+  {id:35,name:'Soap/Saabun',emoji:'🧼',qty:4,unit:'pcs',price:120,cat:'other'},
+  {id:36,name:'Shampoo',emoji:'🧴',qty:1,unit:'btl',price:350,cat:'other'},
+  {id:37,name:'Toothpaste',emoji:'🦷',qty:1,unit:'pcs',price:180,cat:'other'},
+  {id:38,name:'Washing Powder',emoji:'🧺',qty:2,unit:'kg',price:320,cat:'other'},
+];
+
+if(!data.ration.length) data.ration = defaultRation.map(i=>({...i,checked:false}));
+
+// ══ AFFILIATE PRODUCTS ══
+const affProducts = [
+  {emoji:'🔪',name:'Kitchen Knife Set',desc:'Professional 6-piece knife set',link:'https://amzn.to/kitchen-knife',price:'Rs. 1,200'},
+  {emoji:'🫙',name:'Storage Containers',desc:'Airtight ration containers set',link:'https://amzn.to/containers',price:'Rs. 850'},
+  {emoji:'⚖️',name:'Kitchen Scale',desc:'Digital weighing scale 5kg',link:'https://amzn.to/scale',price:'Rs. 650'},
+  {emoji:'🍳',name:'Non-stick Pan',desc:'Granite coating frying pan',link:'https://amzn.to/pan',price:'Rs. 1,800'},
+  {emoji:'🥘',name:'Pressure Cooker',desc:'5 liter pressure cooker',link:'https://amzn.to/cooker',price:'Rs. 2,500'},
+  {emoji:'🧹',name:'Vacuum Cleaner',desc:'Portable home vacuum',link:'https://amzn.to/vacuum',price:'Rs. 3,200'},
+];
+
+// ══ INIT ══
+window.onload = () => {
+  if(data.darkMode) document.body.classList.add('dark');
+  loadBills();
+  renderRation();
+  renderExpenses();
+  renderCategories();
+  renderAffiliate();
+  updateDashboard();
+  document.getElementById('budgetInput').value = data.budget || '';
+  document.getElementById('budgetDisplay').textContent = 'Rs. ' + (data.budget||0).toLocaleString();
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('expDate').value = today;
+};
+
+// ══ NAVIGATION ══
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l=>{
+    if(l.textContent.toLowerCase().includes(id.substring(0,4))) l.classList.add('active');
+  });
+  if(id==='reports') renderReports();
+  window.scrollTo(0,0);
+}
+function toggleMenu(){document.getElementById('mobMenu').classList.toggle('open')}
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  data.darkMode = document.body.classList.contains('dark');
+  document.getElementById('darkBtn').textContent = data.darkMode ? '☀️' : '🌙';
+  saveData();
+}
+
+// ══ BUDGET ══
+function saveBudget(){
+  data.budget = parseInt(document.getElementById('budgetInput').value)||0;
+  document.getElementById('budgetDisplay').textContent = 'Rs. ' + data.budget.toLocaleString();
+  saveData(); updateDashboard();
+}
+
+// ══ BILLS ══
+function loadBills(){
+  document.getElementById('billElec').value = data.bills.elec||'';
+  document.getElementById('billGas').value = data.bills.gas||'';
+  document.getElementById('billWater').value = data.bills.water||'';
+  document.getElementById('billNet').value = data.bills.net||'';
+  document.getElementById('billMob').value = data.bills.mob||'';
+  document.getElementById('billRent').value = data.bills.rent||'';
+}
+function saveBills(){
+  data.bills = {
+    elec: parseInt(document.getElementById('billElec').value)||0,
+    gas: parseInt(document.getElementById('billGas').value)||0,
+    water: parseInt(document.getElementById('billWater').value)||0,
+    net: parseInt(document.getElementById('billNet').value)||0,
+    mob: parseInt(document.getElementById('billMob').value)||0,
+    rent: parseInt(document.getElementById('billRent').value)||0,
+  };
+  saveData(); updateDashboard();
+}
+
+// ══ DASHBOARD ══
+function updateDashboard(){
+  const budget = data.budget||0;
+  const rationTotal = data.ration.reduce((s,i)=>s+(i.qty*i.price),0);
+  const expTotal = data.expenses.reduce((s,e)=>s+e.amount,0);
+  const billsTotal = Object.values(data.bills).reduce((s,v)=>s+v,0);
+  const totalSpent = expTotal + rationTotal + billsTotal;
+  const remaining = budget - totalSpent;
+  const pct = budget > 0 ? Math.min(100,(totalSpent/budget)*100) : 0;
+
+  document.getElementById('dBudget').textContent = 'Rs. '+budget.toLocaleString();
+  document.getElementById('dExpenses').textContent = 'Rs. '+expTotal.toLocaleString();
+  document.getElementById('dRation').textContent = 'Rs. '+rationTotal.toLocaleString();
+  document.getElementById('dBills').textContent = 'Rs. '+billsTotal.toLocaleString();
+  document.getElementById('dRemain').textContent = 'Rs. '+remaining.toLocaleString();
+  document.getElementById('dPercent').textContent = pct.toFixed(1)+'%';
+  document.getElementById('progText').textContent = 'Rs. '+totalSpent.toLocaleString()+' / Rs. '+budget.toLocaleString();
+  const fill = document.getElementById('progFill');
+  fill.style.width = pct+'%';
+  fill.className = 'prog-fill' + (pct>90?' danger':pct>70?' warn':'');
+}
+
+// ══ RATION ══
+let currentCat = 'all';
+let searchTerm = '';
+
+function renderRation(){
+  const tbody = document.getElementById('rationBody');
+  let items = data.ration;
+  if(currentCat !== 'all') items = items.filter(i=>i.cat===currentCat);
+  if(searchTerm) items = items.filter(i=>i.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  tbody.innerHTML = items.map(item=>`
+    <tr id="row-${item.id}">
+      <td class="check-col"><input type="checkbox" ${item.checked?'checked':''} onchange="toggleCheck(${item.id})"></td>
+      <td>${item.emoji} ${item.name}</td>
+      <td><input type="number" value="${item.qty}" min="0" style="width:70px" onchange="updateRation(${item.id},'qty',this.value)"></td>
+      <td><select style="width:70px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px;color:var(--text);font-family:'Poppins'" onchange="updateRation(${item.id},'unit',this.value)">
+        ${['kg','gm','ltr','ml','pcs','dozen','btl','pkt'].map(u=>`<option ${item.unit===u?'selected':''}>${u}</option>`).join('')}
+      </select></td>
+      <td><input type="number" value="${item.price}" min="0" style="width:90px" onchange="updateRation(${item.id},'price',this.value)"></td>
+      <td class="item-total">Rs. ${(item.qty*item.price).toLocaleString()}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteRation(${item.id})">🗑️</button></td>
+    </tr>
+  `).join('');
+  const total = data.ration.reduce((s,i)=>s+(i.qty*i.price),0);
+  document.getElementById('rationTotal').textContent = 'Rs. '+total.toLocaleString();
+  updateDashboard();
+}
+
+function updateRation(id,field,val){
+  const item = data.ration.find(i=>i.id===id);
+  if(item){
+    item[field] = field==='unit' ? val : parseFloat(val)||0;
+    saveData(); renderRation();
+  }
+}
+function toggleCheck(id){
+  const item = data.ration.find(i=>i.id===id);
+  if(item){item.checked=!item.checked; saveData();}
+}
+function deleteRation(id){
+  data.ration = data.ration.filter(i=>i.id!==id);
+  saveData(); renderRation(); toast('🗑️ Item delete ho gaya');
+}
+function filterCat(cat,el){
+  currentCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderRation();
+}
+function filterRation(val){searchTerm=val; renderRation();}
+function addCustomItem(){
+  const name = prompt('Item ka naam:');
+  if(!name) return;
+  const newItem = {
+    id: Date.now(),name,emoji:'📦',qty:1,unit:'kg',price:0,cat:'other',checked:false
+  };
+  data.ration.push(newItem);
+  saveData(); renderRation(); toast('✅ Item add ho gaya!');
+}
+
+// ══ EXPENSES ══
+const catIcons = {food:'🍽️',transport:'🚗',medical:'💊',education:'📚',clothing:'👗',entertainment:'🎉',bills:'📱',other:'📦'};
+const catColors = {food:'#FF9800',transport:'#2196F3',medical:'#F44336',education:'#9C27B0',clothing:'#E91E63',entertainment:'#4CAF50',bills:'#607D8B',other:'#795548'};
+
+function addExpense(){
+  const title = document.getElementById('expTitle').value.trim();
+  const amount = parseInt(document.getElementById('expAmount').value)||0;
+  const cat = document.getElementById('expCat').value;
+  const date = document.getElementById('expDate').value;
+  const note = document.getElementById('expNote').value;
+  if(!title){toast('📝 Title likhen!');return;}
+  if(!amount){toast('💰 Amount likhen!');return;}
+  const exp = {id:Date.now(),title,amount,cat,date,note};
+  data.expenses.unshift(exp);
+  saveData(); renderExpenses(); updateDashboard();
+  document.getElementById('expTitle').value='';
+  document.getElementById('expAmount').value='';
+  document.getElementById('expNote').value='';
+  toast('✅ Expense save ho gaya!');
+}
+
+function renderExpenses(){
+  const list = document.getElementById('expList');
+  if(!data.expenses.length){
+    list.innerHTML='<div class="empty"><div class="empty-icon">💸</div><p>Koi expense nahi<br>Upar add karein</p></div>';
+    return;
+  }
+  list.innerHTML = data.expenses.map(e=>`
+    <div class="exp-item">
+      <div class="exp-icon" style="background:${catColors[e.cat]}22">${catIcons[e.cat]}</div>
+      <div class="exp-details">
+        <div class="exp-name">${e.title}</div>
+        <div class="exp-meta">${e.cat} • ${e.date}${e.note?' • '+e.note:''}</div>
+      </div>
+      <div class="exp-amount">-Rs. ${e.amount.toLocaleString()}</div>
+      <button class="btn btn-danger btn-sm" onclick="delExpense(${e.id})">🗑️</button>
+    </div>
+  `).join('');
+}
+
+function delExpense(id){
+  data.expenses = data.expenses.filter(e=>e.id!==id);
+  saveData(); renderExpenses(); updateDashboard(); toast('🗑️ Delete ho gaya');
+}
+function clearExpenses(){
+  if(confirm('Sab expenses delete karein?')){
+    data.expenses=[];saveData();renderExpenses();updateDashboard();toast('🗑️ Sab clear!');
+  }
+}
+
+// ══ CATEGORIES ══
+function addCategory(){
+  const name=document.getElementById('catName').value.trim();
+  const amount=parseInt(document.getElementById('catAmount').value)||0;
+  const icon=document.getElementById('catIcon').value;
+  if(!name){toast('📝 Category naam likhen!');return;}
+  data.categories.push({id:Date.now(),name,amount,icon,spent:0});
+  saveData();renderCategories();
+  document.getElementById('catName').value='';
+  document.getElementById('catAmount').value='';
+  toast('✅ Category add ho gayi!');
+}
+
+function renderCategories(){
+  const list=document.getElementById('catList');
+  if(!data.categories.length){
+    list.innerHTML='<div class="empty"><div class="empty-icon">📂</div><p>Koi category nahi<br>Upar add karein</p></div>';
+    return;
+  }
+  list.innerHTML=data.categories.map(c=>{
+    const pct=c.amount>0?Math.min(100,(c.spent/c.amount)*100):0;
+    return`<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:15px;font-weight:600">${c.icon} ${c.name}</div>
+        <button class="btn btn-danger btn-sm" onclick="deleteCat(${c.id})">🗑️</button>
+      </div>
+      <div class="prog-label">
+        <span>Rs. ${c.spent.toLocaleString()} / Rs. ${c.amount.toLocaleString()}</span>
+        <span>${pct.toFixed(0)}%</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill ${pct>90?'danger':pct>70?'warn':''}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function deleteCat(id){
+  data.categories=data.categories.filter(c=>c.id!==id);
+  saveData();renderCategories();toast('🗑️ Delete ho gaya');
+}
+
+// ══ REPORTS ══
+function renderReports(){
+  const rationTotal=data.ration.reduce((s,i)=>s+(i.qty*i.price),0);
+  const expTotal=data.expenses.reduce((s,e)=>s+e.amount,0);
+  const billsTotal=Object.values(data.bills).reduce((s,v)=>s+v,0);
+  const total=rationTotal+expTotal+billsTotal;
+  const remaining=(data.budget||0)-total;
+
+  document.getElementById('reportGrid').innerHTML=`
+    <div class="rep-card"><div class="rep-num">Rs. ${(data.budget||0).toLocaleString()}</div><div class="rep-label">💰 Monthly Budget</div></div>
+    <div class="rep-card"><div class="rep-num" style="color:var(--danger)">Rs. ${total.toLocaleString()}</div><div class="rep-label">💸 Total Spent</div></div>
+    <div class="rep-card"><div class="rep-num" style="color:var(--success)">Rs. ${remaining.toLocaleString()}</div><div class="rep-label">✅ Remaining</div></div>
+    <div class="rep-card"><div class="rep-num" style="color:var(--warn)">Rs. ${rationTotal.toLocaleString()}</div><div class="rep-label">🛒 Ration Cost</div></div>
+    <div class="rep-card"><div class="rep-num" style="color:#5C6BC0">Rs. ${billsTotal.toLocaleString()}</div><div class="rep-label">⚡ Bills</div></div>
+    <div class="rep-card"><div class="rep-num" style="color:var(--danger)">Rs. ${expTotal.toLocaleString()}</div><div class="rep-label">📊 Other Expenses</div></div>
+  `;
+
+  // Chart
+  const cats=[
+    {label:'🛒 Ration',val:rationTotal,color:'var(--accent)'},
+    {label:'⚡ Bills',val:billsTotal,color:'#5C6BC0'},
+    {label:'📊 Expenses',val:expTotal,color:'var(--danger)'},
+  ];
+  const max=Math.max(...cats.map(c=>c.val),1);
+  document.getElementById('chartBars').innerHTML=cats.map(c=>`
+    <div class="chart-row">
+      <div class="chart-label">${c.label}</div>
+      <div class="chart-bar" style="width:${Math.max(5,(c.val/max)*100*0.7)}%;background:${c.color}">
+        <span class="chart-val">Rs. ${c.val.toLocaleString()}</span>
+      </div>
+    </div>
+  `).join('');
+
+  // Summary
+  document.getElementById('summaryBody').innerHTML=cats.map(c=>{
+    const pct=data.budget>0?((c.val/data.budget)*100).toFixed(1):0;
+    const status=pct>40?'<span class="badge badge-red">High</span>':pct>20?'<span class="badge badge-orange">Medium</span>':'<span class="badge badge-green">Good</span>';
+    return`<tr><td>${c.label}</td><td>Rs. ${c.val.toLocaleString()}</td><td>${pct}%</td><td>${status}</td></tr>`;
+  }).join('');
+}
+
+function printReport(){window.print();}
+
+// ══ AFFILIATE ══
+function renderAffiliate(){
+  document.getElementById('affGrid').innerHTML=affProducts.map(p=>`
+    <div class="aff-card">
+      <div class="aff-img">${p.emoji}</div>
+      <div class="aff-body">
+        <div class="aff-name">${p.name}</div>
+        <div class="aff-desc">${p.desc}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px">${p.price}</div>
+        <a href="${p.link}" target="_blank" class="aff-btn">🛒 Buy Now</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══ SAVE ══
+function saveData(){localStorage.setItem('ghb_data',JSON.stringify(data));}
+
+// ══ TOAST ══
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toastEl');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
